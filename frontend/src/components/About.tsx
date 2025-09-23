@@ -58,43 +58,48 @@ export default function About() {
             </div>
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
 
-        {/* About Hackman V8.0 Section */}
-        <div className="relative py-10 sm:py-12 lg:py-16">
-          <div className="absolute top-1/2 left-0 -translate-y-1/2 transform hidden lg:block">
-            <Image src="/images/left_bat.png" alt="Bats" width={400} height={200} />
-          </div>
-          <div className="absolute top-1/2 right-0 -translate-y-1/2 transform hidden lg:block">
-            <Image src="/images/right_bat.png" alt="Bats" width={400} height={200} />
-          </div>
+export function AboutHackman() {
+  return (
+    <section className="relative bg-black text-white" id="about-hackman">
+      <div className="relative py-10 sm:py-12 lg:py-16">
+        {/* Side bats */}
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 transform hidden lg:block">
+          <Image src="/images/left_bat.png" alt="Bats" width={400} height={200} />
+        </div>
+        <div className="absolute top-1/2 right-0 -translate-y-1/2 transform hidden lg:block">
+          <Image src="/images/right_bat.png" alt="Bats" width={400} height={200} />
+        </div>
 
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="font-jolly text-[#ff0500] text-4xl sm:text-5xl lg:text-6xl mb-10">
-              About Hackman V8.0
-            </h2>
-            <div className="max-w-5xl mx-auto rounded-[2rem] sm:rounded-[3rem] bg-[#151515] p-6 sm:p-10 lg:p-12 shadow-lg">
-              <p className="font-poppins text-white text-base sm:text-lg mb-2">
-                Code. Create. Conquer The Dark.
-              </p>
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="font-jolly text-[#ff0500] text-4xl sm:text-5xl lg:text-6xl mb-10">
+            About Hackman V8.0
+          </h2>
+          <div className="max-w-5xl mx-auto rounded-[2rem] sm:rounded-[3rem] bg-[#151515] p-6 sm:p-10 lg:p-12 shadow-lg">
+            <p className="font-poppins text-white text-base sm:text-lg mb-2">
+              Code. Create. Conquer The Dark.
+            </p>
 
-              <h1 className="font-nosifer tracking-tight text-4xl sm:text-5xl lg:text-[60px] xl:text-[64px] mb-4 leading-tight">
-                HACKMAN 2025
-              </h1>
+            <h1 className="font-nosifer tracking-tight text-4xl sm:text-5xl lg:text-[60px] xl:text-[64px] mb-4 leading-tight">
+              HACKMAN 2025
+            </h1>
 
-              <p className="font-poppins text-[#747474] text-sm sm:text-base mb-6 leading-relaxed">
-                Our Grand Ritual, Hackman 2025, Rises From The Shadows As A 36-Hour Haunted Hackathon, Where
-                Restless Minds Gather To Code, Create, And Conquer The Dark. Guided By The Wisdom Of The
-                Masters Of The Craft, Participants Will Battle Sleepless Nights, Conjure Groundbreaking
-                Ideas, And Fight For Wicked Prizes, Swag, And Eerie Goodies &mdash; Only The Brave Will Survive!
-              </p>
-              <button className="bg-[#fe772d] hover:bg-orange-600 text-xl sm:text-2xl lg:text-3xl text-gray-900 font-jolly font-bold py-2 sm:py-3 px-8 sm:px-12 lg:px-[4rem] rounded-[1rem] sm:rounded-[1.5rem] transition-colors duration-300">
-                View Details
-              </button>
-            </div>
+            <p className="font-poppins text-[#747474] text-sm sm:text-base mb-6 leading-relaxed">
+              Our Grand Ritual, Hackman 2025, Rises From The Shadows As A 36-Hour Haunted Hackathon, Where
+              Restless Minds Gather To Code, Create, And Conquer The Dark. Guided By The Wisdom Of The
+              Masters Of The Craft, Participants Will Battle Sleepless Nights, Conjure Groundbreaking
+              Ideas, And Fight For Wicked Prizes, Swag, And Eerie Goodies &mdash; Only The Brave Will Survive!
+            </p>
+            <button className="bg-[#fe772d] hover:bg-orange-600 text-xl sm:text-2xl lg:text-3xl text-gray-900 font-jolly font-bold py-2 sm:py-3 px-8 sm:px-12 lg:px-[4rem] rounded-[1rem] sm:rounded-[1.5rem] transition-colors duration-300">
+              View Details
+            </button>
           </div>
         </div>
       </div>
     </section>
   );
 }
-
