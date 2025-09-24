@@ -53,10 +53,10 @@ export default function Navigation() {
             </li>
             <li>
               <a
-                href="#galary"
+                href="#gallery"
                 className="hover:text-blue-200 transition-colors"
               >
-                Galary
+                Gallery
               </a>
             </li>
           </ul>
