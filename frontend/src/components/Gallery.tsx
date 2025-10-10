@@ -50,7 +50,7 @@ export default function Gallery() {
           if (entry.isIntersecting) {
             entry.target.classList.add("animate-in");
             imagesRef.current.forEach((img, index) => {
-              if (img) img.style.animationDelay = `${0.01 + index * 0.08}s`;
+              if (img) img.style.animationDelay = `${0.01 + index * 0.03}s`;
             });
           } else {
             entry.target.classList.remove("animate-in");

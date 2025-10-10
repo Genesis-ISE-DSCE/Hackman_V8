@@ -167,40 +167,73 @@ export default function About() {
           100% {
             transform: translateY(0);
           }
-        }
+        } 
       `}</style>
 
       <section ref={sectionRef} className="relative -mb-32 bg-black text-white" id="about">
-        <div ref={addToImagesRef} className="about-image-left absolute left-0 top-4 hidden lg:block">
-          <Image src="/images/net.jpg" alt="Spiderweb" width={240} height={280} className="opacity-60" />
-        </div>
-        <div ref={addToImagesRef} className="about-image-top absolute left-1/2 -translate-x-1/2 top-0 hidden lg:block">
-          <Image src="/images/Vector.png" alt="vector" width={520} height={120} />
-        </div>
-        <div ref={addToImagesRef} className="about-image-right absolute right-0 top-80 -translate-y-1/2 transform hidden lg:block">
-          <Image src="/images/skeleton.png" alt="Skeleton" width={296} height={600} className="mt-[10rem] opacity-80" />
+        <div
+          ref={addToImagesRef}
+          className="about-image-left absolute left-0 top-4 block"
+        >
+          <Image
+            src="/images/net.jpg"
+            alt="Spiderweb"
+            width={240}
+            height={280}
+            className="opacity-60 w-28 sm:w-40 md:w-52 lg:w-60 h-auto object-contain"
+          />
         </div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-40">
-          <div className="mb-20 lg:mb-32">
-            <h2 className="font-jolly about-title text-center text-[#ff0500] text-4xl sm:text-5xl lg:text-6xl mb-6">
+        <div
+          ref={addToImagesRef}
+          className="about-image-top absolute left-1/2 -translate-x-1/2 top-0 block"
+        >
+          <Image
+            src="/images/Vector.png"
+            alt="Vector"
+            width={520}
+            height={120}
+            className="w-40 sm:w-64 md:w-80 lg:w-[520px] h-auto object-contain"
+          />
+        </div>
+
+        <div
+          ref={addToImagesRef}
+          className="about-image-right absolute right-0 top-60 sm:top-72 md:top-80 transform block"
+        >
+          <Image
+            src="/images/skeleton.png"
+            alt="Skeleton"
+            width={296}
+            height={600}
+            className="opacity-80 mt-20 w-28 sm:w-40 md:w-52 lg:w-[296px] h-auto object-contain"
+          />
+        </div>
+
+
+       <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-12 sm:py-20 md:py-28 lg:py-40">
+          <div className="mb-12 sm:mb-16 md:mb-20 lg:mb-32">
+            <h2 
+            className="font-jolly about-title text-center text-[#ff0500] text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mb-6">
               About Genesis
             </h2>
-            <div ref={contentRef} className="about-content max-w-6xl mx-auto text-center">
-              <p className="font-poppins text-white mb-4 text-base sm:text-lg">
-                GENESIS Is Much More Than Just A Team, It&apos;s A Close-Knit Family. With A Diverse Group Of 50 Individuals,
-                Each Bringing Their Own Set Of Skills And Experiences, The Connections They Share Go Far Beyond The
-                Typical Work Relationship. From Managers To Supervisors To Executives, Everyone Comes Together With A
-                Shared Vision And A Collective Purpose. GENESIS Is Built On Four Major Pillars: Technical, Sports,
-                Cultural, And Social. But These Aren&apos;t Just Categories Or Labels, But Also &mdash; They&apos;re A Reflection Of The
-                Unique Passions And Interests That Each Team Member Brings.
+
+            <div ref={contentRef} className="about-content max-w-4xl sm:max-w-5xl md:max-w-6xl mx-auto text-center px-2 sm:px-4">
+              <p className="font-poppins text-white mb-4 text-xs sm:text-sm md:text-base lg:text-lg">
+                GENESIS is much more than just a team, it&apos;s a close-knit family. With a diverse group of 50 individuals,
+                each bringing their own set of skills and experiences, the connections they share go far beyond the
+                typical work relationship. From managers to supervisors to executives, everyone comes together with a
+                shared vision and a collective purpose. GENESIS is built on four major pillars: technical, sports,
+                cultural, and social. But these aren&apos;t just categories or labels, but also &mdash; they&apos;re a reflection of the
+                unique passions and interests that each team member brings.
               </p>
-              <p className="font-poppins text-white text-base sm:text-lg">
-                Some Are Creative Minds With A Knack For Design, Others Are Passionate Athletes, And Some Are Tech
-                Experts. There Are Also Those Who Are Deeply Committed To Making A Social Impact. What Truly Makes GENESIS
-                Stand Out, However, Is The Emotional Connection They Create With The People They Serve. Through Events
-                Like Cultural Festivals That Unite Different Groups And Sports Activities That Promote Camaraderie And
-                Healthy Competition, GENESIS Fosters A Strong Sense Of Community Among Students, Faculty, And Beyond.
+
+              <p className="font-poppins text-white text-xs sm:text-sm md:text-base lg:text-lg">
+                Some are creative minds with a knack for design, others are passionate athletes, and some are tech
+                experts. There are also those who are deeply committed to making a social impact. What truly makes GENESIS
+                stand out, however, is the emotional connection they create with the people they serve. Through events
+                like cultural festivals that unite different groups and sports activities that promote camaraderie and
+                healthy competition, GENESIS fosters a strong sense of community among students, faculty, and beyond.
               </p>
             </div>
           </div>
@@ -293,13 +326,13 @@ export function AboutHackman() {
         <div className="relative py-10 sm:py-12 lg:py-16">
           <div
             ref={addToImagesRef}
-            className="absolute top-1/2 left-0 -translate-y-1/2 transform hidden lg:block left-bat"
+            className="absolute top-1/2 left-0 -translate-y-1/2 transform left-bat"
           >
             <Image src="/images/left_bat.png" alt="Bats" width={400} height={200} />
           </div>
           <div
             ref={addToImagesRef}
-            className="absolute top-1/2 right-0 -translate-y-1/2 transform hidden lg:block right-bat"
+            className="absolute top-1/2 right-0 -translate-y-1/2 transform right-bat"
           >
             <Image src="/images/right_bat.png" alt="Bats" width={400} height={200} />
           </div>
@@ -322,10 +355,10 @@ export function AboutHackman() {
               </h1>
 
               <p className="font-poppins text-[#747474] text-sm sm:text-base mb-6 leading-relaxed">
-                Our Grand Ritual, Hackman 2025, Rises From The Shadows As A 36-Hour Haunted Hackathon, Where
-                Restless Minds Gather To Code, Create, And Conquer The Dark. Guided By The Wisdom Of The
-                Masters Of The Craft, Participants Will Battle Sleepless Nights, Conjure Groundbreaking
-                Ideas, And Fight For Wicked Prizes, Swag, And Eerie Goodies &mdash; Only The Brave Will Survive!
+                Our Grand Ritual, Hackman 2025, rises from the shadows as a 36-Hour Haunted Hackathon, where
+                restless minds gather to code, create, and conquer the dark. Guided by the wisdom of the
+                masters of the craft, participants will battle sleepless nights, conjure groundbreaking
+                ideas, and fight for wicked prizes, swag, and eerie goodies &mdash; only the brave will survive!
               </p>
               <button className="bg-[#fe772d] hover:bg-orange-600 text-xl sm:text-2xl lg:text-3xl text-gray-900 font-jolly font-bold py-2 sm:py-3 px-8 sm:px-12 lg:px-[4rem] rounded-[1rem] sm:rounded-[1.5rem] transition-colors duration-300">
                 View Details

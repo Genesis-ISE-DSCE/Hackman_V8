@@ -95,7 +95,13 @@
   }
 
   .faqSkullLeft {
-    display: none; 
+    position: absolute;
+    height: 300px;
+    width: auto; 
+    opacity: 0.8; 
+    pointer-events: none;
+    top: 50px;
+    left: 20px;
   }
 
   .faqContent {

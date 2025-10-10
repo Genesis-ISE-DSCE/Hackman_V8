@@ -38,10 +38,10 @@ export default function Navigation() {
 
   const navItems = [
     { href: "#hero", label: "Home", delay: 0.5 },
-    { href: "#about-hackman", label: "About Hackman", delay: 0.6 },
-    { href: "#about", label: "About Genesis", delay: 0.7 },
-    { href: "#sponsors", label: "Sponsors", delay: 0.8 },
-    { href: "#gallery", label: "Gallery", delay: 0.9 },
+    { href: "#about", label: "About Genesis", delay: 0.6 },
+    { href: "#about-hackman", label: "About Hackman", delay: 0.7 },
+    { href: "#gallery", label: "Gallery", delay: 0.8 },
+    { href: "#sponsors", label: "Sponsors", delay: 0.9 },
   ];
 
   return (
@@ -168,7 +168,7 @@ export default function Navigation() {
           ))}
         </ul>
         <div
-          className="order-1 md:order-2 flex-shrink-0"
+          className="order-1 md:order-2 flex-shrink-0 mt-0 sm:mt-0"
           style={{
             animation: "fadeIn 0.8s ease-out 1s forwards",
             opacity: 0,
