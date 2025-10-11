@@ -2,7 +2,10 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import { Jolly_Lodger, Poppins } from "next/font/google";
 import styles from '../styles/FAQ.module.css';
+const jollyLodger = Jolly_Lodger({ weight: "400", subsets: ["latin"] });
+const poppins = Poppins({ weight: "400", subsets: ["latin"] });
 
 interface FAQItemProps {
   question: string;
@@ -87,7 +90,10 @@ const FAQ: React.FC = () => {
           50% { transform: translateY(-20px); }
           100% { transform: translateY(0); }
         }
-
+        .animate-in .faq-title {
+          animation: slideInFromTop 0.8s ease-out forwards,
+            glowPulse 2s ease-in-out infinite 1s;
+        }
         .floatingSkull {
           animation: floatUpDown 2s ease-in-out infinite;
         }
@@ -103,7 +109,11 @@ const FAQ: React.FC = () => {
         />
 
         <div className={styles.faqContent}>
-          <h2 className={styles.faqTitle}>Frequently Asked Questions</h2>
+          {/* <h2 className={`${jollyLodger.className} text-[#FF0000] text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-center mb-8 md:mb-12`}> */}
+          {/* <h2 className={`${styles.faqTitle} text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl faq-title text-center mb-6`}> */}
+          <h2 className={styles.faqTitle}>
+            Frequently Asked Questions
+          </h2>
           <div className={styles.faqContainer}>
             {faqData.map((item, index) => (
               <FAQItem key={item.id} index={index} question={item.question} answer={item.answer} />

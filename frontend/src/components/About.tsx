@@ -97,7 +97,8 @@ export default function About() {
         }
 
         .animate-in .about-title {
-          animation: slideInFromTop 0.8s ease-out forwards;
+          animation: slideInFromTop 0.8s ease-out forwards,
+            glowPulse 2s ease-in-out infinite 1s;
         }
         .animate-in .about-image-left {
           animation: slideInFromLeft 1s ease-out forwards;
@@ -338,8 +339,8 @@ export function AboutHackman() {
           </div>
 
           <div className="container mx-auto px-4 text-center" ref={contentRef}>
-            <h2 className="font-jolly about-title text-[#ff0500] text-4xl sm:text-5xl lg:text-6xl mb-10">
-              About Hackman V8.0
+            <h2 className="font-jolly about-title text-[#ff0500] text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mb-10">
+              About Hackman V8
             </h2>
 
             <div

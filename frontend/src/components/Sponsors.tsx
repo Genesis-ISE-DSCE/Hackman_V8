@@ -168,7 +168,7 @@ export default function Sponsors() {
 
       <div className="container mx-auto px-4">
         <h2
-          className={`${jolly.className} sponsors-title text-[#FF0700] text-[72px] text-center mb-12`}
+          className={`${jolly.className} sponsors-title text-[#FF0700] text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-center mb-12`}
         >
           Previous Year Sponsors
         </h2>

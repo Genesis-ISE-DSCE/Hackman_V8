@@ -143,7 +143,7 @@ export default function Contact() {
         </div>
 
         <div ref={contentRef} className="relative z-10 flex flex-col items-center max-w-[700px] mx-auto justify-start pt-10 md:pt-20 px-4 pb-10">
-          <h2 className={`${jollyLodger.className} text-[#FF0000] text-5xl md:text-7xl lg:text-8xl text-center mb-8 md:mb-12`}>
+          <h2 className={`${jollyLodger.className} text-[#FF0000] text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-center mb-8 md:mb-12`}>
             Contact Us
           </h2>
           <form
