@@ -63,16 +63,10 @@ export default function DashboardPage() {
   useEffect(() => {
     const savedLeadEmail = localStorage.getItem('leadEmail');
     const savedPhone = localStorage.getItem('phone');
-    const isNewRegistration = localStorage.getItem('isNewRegistration');
     
-    if (savedLeadEmail && savedPhone) {
-      fetchTeamData(savedLeadEmail, savedPhone, isNewRegistration === 'true');
-      // Clear the flag after auto-login
-      localStorage.removeItem('isNewRegistration');
-    }
   }, []);
 
-  const fetchTeamData = async (leadEmail: string, phone: string, skipWelcomeToast: boolean = false) => {
+  const fetchTeamData = async (leadEmail: string, phone: string) => {
     setIsLoading(true);
     try {
       const response = await fetch(`/api/team/lead?email=${encodeURIComponent(leadEmail)}&phone=${encodeURIComponent(phone)}`);
@@ -84,9 +78,7 @@ export default function DashboardPage() {
         localStorage.setItem('projectName', data.projectTitle || '');
         localStorage.setItem('phone', phone);
         localStorage.setItem('leadEmail', leadEmail);
-        if (!skipWelcomeToast) {
-          toast.success('Welcome to your team dashboard!');
-        }
+        toast.success('Welcome to your team dashboard!');
       } else {
         toast.error(data.message || 'Failed to fetch team data');
         setIsAuthenticated(false);
