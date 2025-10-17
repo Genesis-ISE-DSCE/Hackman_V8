@@ -330,9 +330,9 @@ export function AboutHackman() {
                 masters of the craft, participants will battle sleepless nights, conjure groundbreaking
                 ideas, and fight for wicked prizes, swag, and eerie goodies &mdash; only the brave will survive!
               </p>
-              <button className="bg-[#fe772d] hover:bg-orange-600 text-xl sm:text-2xl lg:text-3xl text-gray-900 font-jolly font-bold py-2 sm:py-3 px-8 sm:px-12 lg:px-[4rem] rounded-[1rem] sm:rounded-[1.5rem] transition-colors duration-300">
+              <a href="/HACKMAN-Brochure.pdf" download className="bg-[#fe772d] hover:bg-orange-600 text-xl sm:text-2xl lg:text-3xl text-gray-900 font-jolly font-bold py-2 sm:py-3 px-8 sm:px-12 lg:px-[4rem] rounded-[1rem] sm:rounded-[1.5rem] transition-colors duration-300">
                 Download Brochure
-              </button>
+              </a>
             </div>
           </div>
         </div>

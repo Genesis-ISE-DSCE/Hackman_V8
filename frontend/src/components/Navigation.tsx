@@ -137,7 +137,7 @@ export default function Navigation() {
               >
                 <a
                   href={item.href}
-                  className="relative group flex items-center px-4 py-3 hover:text-gray-400 transition-all duration-300 transform hover:translate-x-2 text-lg font-medium w-full"
+                  className="relative group flex items-center px-4 py-3 text-white hover:text-gray-400 transition-all duration-300 transform hover:translate-x-2 text-lg font-medium w-full"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}
