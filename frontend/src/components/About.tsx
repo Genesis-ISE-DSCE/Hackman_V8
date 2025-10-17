@@ -325,7 +325,7 @@ export function AboutHackman() {
                 HACKMAN 2025
               </h1>
               <p className="font-poppins text-[#747474] text-sm sm:text-base mb-6 leading-relaxed">
-                Our Grand Ritual, Hackman 2025, rises from the shadows as a 36-Hour Haunted Hackathon, where
+                Our Grand Ritual, Hackman 2025, rises from the shadows as a 24-Hour Haunted Hackathon, where
                 restless minds gather to code, create, and conquer the dark. Guided by the wisdom of the
                 masters of the craft, participants will battle sleepless nights, conjure groundbreaking
                 ideas, and fight for wicked prizes, swag, and eerie goodies &mdash; only the brave will survive!
