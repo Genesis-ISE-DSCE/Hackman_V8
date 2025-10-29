@@ -81,7 +81,7 @@ export default function Navigation() {
             fontSize: 'clamp(18px, 3vw, 28px)',
           }}
         >
-          🎃 The clock ticks... Registrations vanish on October 28th at 7:00 PM - Dare to enter? 👻
+          🎃 The clock ticked.... 👻
         </p>
       </div>
       <button

@@ -395,7 +395,7 @@ export default function Hero() {
           </h1>
           <div className="flex justify-start">
             <a
-              href="/registration"
+              
               className={`${jolly.className} hero-button 
                 w-[35vw] h-[10vw] 
                 sm:w-[19vw] sm:h-[4.5vw] 
@@ -404,7 +404,7 @@ export default function Hero() {
                 text-[5vw] sm:text-[2.8vw] 
                 flex items-center justify-center transform transition-all duration-300 hover:scale-105 hover:bg-[#E5691F] hover:shadow-xl hover-lift opacity-0`}
             >
-              Register Now
+              Registration closed!!
             </a>
           </div>
           <div className={`${jolly.className} hero-subtitle flex justify-start mt-4 mb-6 opacity-0`}>
@@ -413,7 +413,7 @@ export default function Hero() {
               <div className="absolute -inset-1 bg-gradient-to-r from-[#FE772D] via-[#FF0700] to-[#FE772D] rounded-lg blur-sm opacity-45"></div>
               <div className="relative bg-gradient-to-br from-black/90 via-gray-900/90 to-black/90 px-4 py-2 sm:px-5 sm:py-3 md:px-6 md:py-3 lg:px-8 lg:py-4 rounded-xl border-2 border-[#FE772D] backdrop-blur-sm flex items-center justify-center">
                 <span className="animate-text-shimmer text-[5vw] sm:text-[3vw] md:text-[2.2vw] lg:text-[1.6vw] xl:text-[1.4vw] leading-tight font-bold tracking-wider drop-shadow-2xl text-center whitespace-nowrap overflow-hidden text-ellipsis">
-                  31st October 2025
+                  See you next Halloween!!
                 </span>
                 <div className="absolute -top-2 -left-2 w-4 h-4 bg-gradient-to-br from-[#FF0700] to-[#FE772D] rounded-full animate-corner-pulse"></div>
                 <div className="absolute -top-2 -right-2 w-4 h-4 bg-gradient-to-br from-[#FF0700] to-[#FE772D] rounded-full animate-corner-pulse" style={{animationDelay: '0.5s'}}></div>

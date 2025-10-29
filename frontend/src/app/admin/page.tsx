@@ -85,6 +85,7 @@ export default function AdminPage() {
   const [paymentFilter, setPaymentFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(20);
+  const [activePanel, setActivePanel] = useState<number>(1);
   const [payments, setPayments] = useState<Payment[] | null>(null);
   const [loadingPayments, setLoadingPayments] = useState<boolean>(false);
   const [paymentsError, setPaymentsError] = useState<string>("");
@@ -154,10 +155,48 @@ export default function AdminPage() {
       setImageUrl(null);
     }
   }, [viewingPayment, token]);
+
+  // Calculate selected teams stats with useMemo for live updates
+  const dsceSelectedCount = useMemo(() => {
+    if (!data) return 0;
+    return data.filter(r => {
+      const college = r.collegeName.toLowerCase();
+      return (college.includes('dayananda') || college.includes('dayanand') || college.includes('dsce')) && 
+             r.selectionStatus === 'selected';
+    }).length;
+  }, [data]);
+
+  const externalSelectedCount = useMemo(() => {
+    if (!data) return 0;
+    return data.filter(r => {
+      const college = r.collegeName.toLowerCase();
+      return !college.includes('dayananda') && !college.includes('dayanand') && !college.includes('dsce') && 
+             r.selectionStatus === 'selected';
+    }).length;
+  }, [data]);
+
   const filtered = useMemo(() => {
     if (!data) return [] as Registration[];
     const text = query.trim().toLowerCase();
-    return data.filter((r) => {
+    
+    // First filter by college type (Panel 1-3: External, Panel 4-8: DSCE)
+    let collegeFiltered = data;
+    if (activePanel <= 3) {
+      // External colleges (not DSCE, Dayananda, or Dayanand)
+      collegeFiltered = data.filter(r => {
+        const college = r.collegeName.toLowerCase();
+        return !college.includes('dayananda') && !college.includes('dayanand') && !college.includes('dsce');
+      });
+    } else {
+      // Panel 4-8: DSCE/Dayanda colleges
+      collegeFiltered = data.filter(r => {
+        const college = r.collegeName.toLowerCase();
+        return college.includes('dayananda') || college.includes('dayanand') || college.includes('dsce');
+      });
+    }
+    
+    // Then apply other filters
+    const filtered = collegeFiltered.filter((r) => {
       const matchesText = !text || [
         r.teamName,
         r.collegeName,
@@ -173,7 +212,16 @@ export default function AdminPage() {
       const matchesPayment = paymentFilter === 'all' || (r.paymentStatus || 'unpaid') === paymentFilter;
       return matchesText && matchesSelection && matchesSubmission && matchesPayment;
     });
-  }, [data, query, selectionFilter, submissionFilter, paymentFilter]);
+    
+    // Distribute teams evenly across panels within their category
+    const totalTeamsInCategory = filtered.length;
+    const teamsPerPanel = Math.ceil(totalTeamsInCategory / (activePanel <= 3 ? 3 : 5));
+    const panelIndex = activePanel <= 3 ? activePanel - 1 : activePanel - 4;
+    const startIndex = panelIndex * teamsPerPanel;
+    const endIndex = startIndex + teamsPerPanel;
+    
+    return filtered.slice(startIndex, endIndex);
+  }, [data, query, selectionFilter, submissionFilter, paymentFilter, activePanel]);
 
   // Pagination
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
@@ -607,6 +655,30 @@ export default function AdminPage() {
             </div>
             <div style={{ fontSize: '14px', color: '#999', marginTop: 4 }}>Pending Review</div>
           </div>
+          <div style={{ 
+            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
+            padding: 20, 
+            borderRadius: 12, 
+            border: '2px solid #10b981',
+            boxShadow: '0 4px 20px rgba(16, 185, 129, 0.4)'
+          }}>
+            <div style={{ fontSize: '32px', fontWeight: 700, color: '#fff' }}>
+              {dsceSelectedCount}
+            </div>
+            <div style={{ fontSize: '14px', color: '#fff', marginTop: 4, opacity: 0.9 }}>DSCE Selected</div>
+          </div>
+          <div style={{ 
+            background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)', 
+            padding: 20, 
+            borderRadius: 12, 
+            border: '2px solid #3b82f6',
+            boxShadow: '0 4px 20px rgba(59, 130, 246, 0.4)'
+          }}>
+            <div style={{ fontSize: '32px', fontWeight: 700, color: '#fff' }}>
+              {externalSelectedCount}
+            </div>
+            <div style={{ fontSize: '14px', color: '#fff', marginTop: 4, opacity: 0.9 }}>External Colleges Selected</div>
+          </div>
         </div>
       )}
       {editTarget && editForm && (
@@ -766,6 +838,69 @@ export default function AdminPage() {
       )}
       {!loading && !error && (
         <>
+          {/* Panel Tabs */}
+          <div style={{ marginBottom: 24 }}>
+            <div style={{ 
+              display: 'flex', 
+              gap: 8, 
+              flexWrap: 'wrap',
+              background: 'linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%)',
+              padding: 12,
+              borderRadius: 12,
+              border: '1px solid #333'
+            }}>
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((panelNum) => (
+                <button
+                  key={panelNum}
+                  onClick={() => { setActivePanel(panelNum); setCurrentPage(1); }}
+                  style={{
+                    padding: '12px 20px',
+                    borderRadius: 8,
+                    background: activePanel === panelNum 
+                      ? 'linear-gradient(135deg, #FF0000 0%, #c53030 100%)'
+                      : 'linear-gradient(135deg, #2d3748 0%, #1a202c 100%)',
+                    color: '#fff',
+                    border: 'none',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    boxShadow: activePanel === panelNum 
+                      ? '0 4px 15px rgba(255, 0, 0, 0.5)'
+                      : '0 4px 15px rgba(0, 0, 0, 0.3)'
+                  }}
+                  onMouseOver={(e) => {
+                    if (activePanel !== panelNum) {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #4a5568 0%, #2d3748 100%)';
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    if (activePanel !== panelNum) {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #2d3748 0%, #1a202c 100%)';
+                    }
+                  }}
+                >
+                  Panel {panelNum}
+                </button>
+              ))}
+            </div>
+            <div style={{ 
+              marginTop: 12, 
+              padding: 12, 
+              background: '#1a1a1a', 
+              borderRadius: 8,
+              border: '1px solid #333'
+            }}>
+              <p style={{ margin: 0, color: '#FF0000', fontWeight: 'bold' }}>
+                📊 {activePanel <= 3 ? 'External Colleges' : 'DSCE/Dayanda Sagar'}
+              </p>
+              <p style={{ margin: '4px 0 0 0', color: '#888', fontSize: '14px' }}>
+                Teams in this panel: {filtered.length} | 
+                Selected: {filtered.filter(r => r.selectionStatus === 'selected').length} | 
+                Rejected: {filtered.filter(r => r.selectionStatus === 'rejected').length}
+              </p>
+            </div>
+          </div>
+          
           <div style={{ 
             display: 'none', 
             background: '#fff3cd', 
@@ -782,6 +917,7 @@ export default function AdminPage() {
             <table className="admin-table" style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0, color: '#000' }}>
               <thead>
               <tr style={{ background: 'linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%)', borderBottom: '2px solid #FF0000' }}>
+                <th style={{ textAlign: 'left', padding: 16, color: '#FF0000', fontWeight: 700, fontSize: '14px', width: '50px' }}>#</th>
                 <th style={{ textAlign: 'left', padding: 16, color: '#FF0000', fontWeight: 700, fontSize: '14px' }}>Team</th>
                 <th style={{ textAlign: 'left', padding: 16, color: '#FF0000', fontWeight: 700, fontSize: '14px' }}>College</th>
                 <th style={{ textAlign: 'left', padding: 16, color: '#FF0000', fontWeight: 700, fontSize: '14px' }}>Project</th>
@@ -795,8 +931,11 @@ export default function AdminPage() {
               </tr>
             </thead>
             <tbody>
-              {paginatedData.map((r) => (
+              {paginatedData.map((r, index) => (
                 <tr key={r._id} style={{ background: '#1c1c1c', color: '#ffffff', borderBottom: '1px solid #2a2a2a' }}>
+                  <td style={{ padding: 16, borderTop: '1px solid #2a2a2a', textAlign: 'center', fontWeight: 700, color: '#FF0000' }}>
+                    {(currentPage - 1) * itemsPerPage + index + 1}
+                  </td>
                   <td style={{ padding: 16, borderTop: '1px solid #2a2a2a' }}>
                     <div style={{ fontWeight: 600 }}>{r.teamName}</div>
                   </td>

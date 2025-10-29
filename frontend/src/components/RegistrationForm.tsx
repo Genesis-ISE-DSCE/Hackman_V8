@@ -256,7 +256,7 @@ const RegistrationForm: React.FC = () => {
                   <div className={styles.fieldControl}>
                     <input
                       type="email"
-                      placeholder="Email ID"
+                      placeholder="email@mail.com"
                       className={styles.input}
                       value={member.email}
                       onChange={(e) => handleMemberChange(member.id, 'email', e.target.value)}
@@ -269,7 +269,7 @@ const RegistrationForm: React.FC = () => {
                   <div className={styles.fieldControl}>
                     <input
                       type="url"
-                      placeholder="LinkedIn Profile URL"
+                      placeholder="https://www.linkedin.com/in/username"
                       className={styles.input}
                       value={member.linkedin || ''}
                       onChange={(e) => handleMemberChange(member.id, 'linkedin', e.target.value)}
@@ -282,7 +282,7 @@ const RegistrationForm: React.FC = () => {
                   <div className={styles.fieldControl}>
                     <input
                       type="url"
-                      placeholder="GitHub Profile URL"
+                      placeholder="https://github.com/username"
                       className={styles.input}
                       value={member.github || ''}
                       onChange={(e) => handleMemberChange(member.id, 'github', e.target.value)}
