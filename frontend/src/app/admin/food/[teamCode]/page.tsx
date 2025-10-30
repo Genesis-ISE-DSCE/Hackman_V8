@@ -1,153 +1,195 @@
 "use client";
 
-import React, { useState, use } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import { Nosifer } from 'next/font/google';
+import styles from '@/styles/AdminFood.module.css';
+import toast, { Toaster } from 'react-hot-toast';
 
 // --- Interfaces ---
-interface Member {
-  id: number | string;
+interface MemberFoodStatus {
+  _id: string; // The MongoDB document ID
   name: string;
-}
-interface TeamData {
   teamName: string;
-  members: Member[];
+  teamId: string;
+  attendance: boolean;
+  hadBreakfast: boolean;
+  hadLunch: boolean;
+  hadDinner: boolean;
+  hadSnacks: boolean;
 }
-type MealStatus = {
-  breakfast: boolean; lunch: boolean; dinner: boolean; snacks: boolean;
-};
-
-// --- Mock Data ---
-const MOCK_TEAM_DATA: TeamData = {
-  teamName: "The Static Team",
-  members: [
-    { id: 101, name: "Alice Smith" },
-    { id: 102, name: "Bob Johnson" },
-    { id: 103, name: "Charlie Brown" },
-  ],
-};
+type MemberList = MemberFoodStatus[];
+type StatusField = 'attendance' | 'hadBreakfast' | 'hadLunch' | 'hadDinner' | 'hadSnacks';
 
 // --- Font Setup ---
-const nosifer = Nosifer({
-  weight: '400',
-  subsets: ['latin'],
-  display: 'swap',
-});
+const nosifer = Nosifer({ weight: '400', subsets: ['latin'], display: 'swap' });
 
-// --- Initialization Function ---
-const initializeFoodStatus = (members: Member[]): Record<string | number, MealStatus> => {
-  const initialStatus: Record<string | number, MealStatus> = {};
-  members.forEach(member => {
-    initialStatus[member.id] = { breakfast: false, lunch: false, dinner: false, snacks: false };
-  });
-  return initialStatus;
+// --- Mappings for UI ---
+const itemTypes: StatusField[] = [
+  'attendance',
+  'hadLunch',
+  'hadDinner',
+  'hadSnacks',
+  'hadBreakfast',
+];
+const headerMap: Record<StatusField, string> = {
+  attendance: 'Attendance',
+  hadBreakfast: 'Breakfast',
+  hadLunch: 'Lunch',
+  hadDinner: 'Dinner',
+  hadSnacks: 'Snacks',
 };
 
-export default function FoodDistributionPage({ params }: { params: Promise<{ teamCode: string }> }) {
-  const resolvedParams = use(params);
-  const { teamCode } = resolvedParams;
+export default function FoodDistributionPage() {
+  const params = useParams();
+  const teamCode = params.teamCode as string;
 
   // --- State Hooks ---
-  const teamData = MOCK_TEAM_DATA;
-  const [foodStatus, setFoodStatus] = useState<Record<string | number, MealStatus>>(
-    initializeFoodStatus(MOCK_TEAM_DATA.members)
-  );
+  const [membersData, setMembersData] = useState<MemberList>([]);
+  const [teamName, setTeamName] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // --- Handler ---
-  const handleFoodToggle = (memberId: string | number, mealType: keyof MealStatus) => {
-    const newStatus = !foodStatus[memberId]?.[mealType];
-    setFoodStatus(prevStatus => {
-      const currentMemberStatus = prevStatus[memberId] || { breakfast: false, lunch: false, dinner: false, snacks: false };
-      return {
-        ...prevStatus,
-        [memberId]: { ...currentMemberStatus, [mealType]: newStatus },
-      };
-    });
-    console.log(`Toggled ${mealType} for member ${memberId} to ${newStatus} (Static - No backend call)`);
+  // --- Data Fetching Effect ---
+  useEffect(() => {
+    if (!teamCode || teamCode === "undefined") {
+      setLoading(false);
+      setError("Invalid team code in URL.");
+      return;
+    }
+
+    const fetchTeam = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`/api/admin/food/${teamCode}`);
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.message || 'Team not found');
+        }
+        const data: MemberList = await response.json();
+        setMembersData(data);
+        if (data.length > 0) {
+          setTeamName(data[0].teamName);
+        } else {
+          setError("No members found for this team.");
+        }
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTeam();
+  }, [teamCode]);
+
+  // --- Update Handler ---
+  const handleFoodToggle = async (
+    docId: string, // Use docId for optimistic UI update
+    teamId: string, // Send teamId to API
+    name: string,   // Send name to API
+    field: StatusField
+  ) => {
+    // Optimistically update the UI using the unique docId
+    const originalData = [...membersData];
+    const member = membersData.find((m) => m._id === docId);
+    if (!member) return;
+    
+    const newStatus = !member[field];
+
+    setMembersData((prevData) =>
+      prevData.map((m) =>
+        m._id === docId ? { ...m, [field]: newStatus } : m
+      )
+    );
+
+    // Call the API with teamId and name
+    try {
+      const response = await fetch('/api/admin/food/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          teamId: teamId, // Use teamId for matching
+          name: name,     // Use name for matching
+          field: field,
+          status: newStatus,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save update');
+      }
+      toast.success(
+        `${headerMap[field]} status updated!`
+      );
+    } catch (saveError: any) {
+      console.error('Failed to save status:', saveError);
+      toast.error('Failed to save, reverting change.');
+      // Revert the state change on error
+      setMembersData(originalData);
+    }
   };
 
   // --- Render logic ---
-  const mealTypes: (keyof MealStatus)[] = ['lunch', 'dinner', 'snacks','breakfast'];
-
-  // --- Inline Styles (Corrected) ---
-  const pageStyle: React.CSSProperties = {
-    padding: '40px 20px',
-    maxWidth: '900px',
-    margin: '40px auto',
-    fontFamily: 'var(--font-geist-sans)',
-    backgroundColor: '#111',
-    color: '#ccc',
-    borderRadius: '12px',
-    border: '1px solid #333',
-    boxShadow: '0 5px 20px rgba(255, 5, 0, 0.1)',
-  };
-  const titleStyle: React.CSSProperties = {
-    textAlign: 'center', marginBottom: '20px', color: '#FF0500',
-    letterSpacing: '1px', textShadow: '1px 1px 3px rgba(0,0,0,0.5)',
-  };
-  const subTitleStyle: React.CSSProperties = {
-    textAlign: 'center', marginBottom: '40px', color: '#FF8C00', fontWeight: 300,
-  };
-  const tableStyle: React.CSSProperties = {
-    width: '100%', borderCollapse: 'collapse', marginTop: '30px', backgroundColor: '#0d0d0d',
-  };
-  const thStyle: React.CSSProperties = {
-    border: '1px solid #444', padding: '15px 10px', /* Increased padding */
-    textAlign: 'center', color: '#eee', backgroundColor: '#222',
-    textTransform: 'capitalize', fontWeight: 600,
-  };
-  const tdStyle: React.CSSProperties = {
-    border: '1px solid #444', padding: '15px 10px', /* Increased padding */
-    textAlign: 'center', verticalAlign: 'middle', /* Center vertically */
-  };
-  const memberNameCellStyle: React.CSSProperties = {
-    ...tdStyle, textAlign: 'left', color: '#e2e8f0',
-  };
-  const checkboxStyle: React.CSSProperties = {
-    width: '18px', height: '18px', cursor: 'pointer', accentColor: '#FF0500',
-    verticalAlign: 'middle', /* Align checkbox with text */
-  };
+  if (loading) { /* ... loading ... */ }
+  if (error) { /* ... error ... */ }
 
   return (
-    <div style={pageStyle}>
-      <h1 style={titleStyle} className={nosifer.className}>Food Distribution Log</h1>
-      <h2 style={subTitleStyle}>Team: {teamData.teamName} (Code: {teamCode})</h2>
+    <div className={styles.pageContainer}>
+      <Toaster />
+      <h1 className={`${styles.title} ${nosifer.className}`}>
+        Food Distribution Log
+      </h1>
+      <h2 className={styles.subTitle}>
+        Team: {teamName} (Code: {teamCode})
+      </h2>
 
-      <table style={tableStyle}>
-        <thead>
-          <tr>
-            {/* Header for Member Name */}
-            <th style={{ ...thStyle, textAlign: 'left', width: '30%' }}>Member Name</th>
-            {/* Headers for Meals */}
-            {mealTypes.map(meal => (
-              <th key={meal} style={thStyle}>{meal}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {teamData.members.map((member) => {
-            const memberId = member.id;
-            const currentStatus = foodStatus[memberId] || { breakfast: false, lunch: false, dinner: false, snacks: false };
-            return (
-              <tr key={memberId}>
-                {/* Member Name Cell */}
-                <td style={memberNameCellStyle}>{member.name}</td>
-                {/* Checkbox Cells for Meals */}
-                {mealTypes.map(meal => (
-                  <td key={meal} style={tdStyle}>
-                    <input
-                      type="checkbox"
-                      id={`food-${memberId}-${meal}`}
-                      checked={!!currentStatus[meal]}
-                      onChange={() => handleFoodToggle(memberId, meal)}
-                      style={checkboxStyle}
-                    />
-                  </td>
-                ))}
+      <div className={styles.tableWrapper}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th className={styles.memberNameHeader}>Member Name</th>
+              {itemTypes.map((item) => (
+                <th key={item}>{headerMap[item]}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {membersData.length > 0 ? (
+              membersData.map((member) => (
+                <tr key={member._id}>
+                  <td className={styles.memberNameCell}>{member.name}</td>
+                  {itemTypes.map((item) => (
+                    <td key={item}>
+                      <input
+                        type="checkbox"
+                        id={`food-${member._id}-${item}`}
+                        checked={!!member[item]}
+                        // Pass all necessary info to the handler
+                        onChange={() => handleFoodToggle(member._id, member.teamId, member.name, item)}
+                        className={styles.checkbox}
+                      />
+                    </td>
+                  ))}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={itemTypes.length + 1}
+                  style={{
+                    textAlign: 'center',
+                    color: '#888',
+                    padding: '20px',
+                  }}
+                >
+                  No members found for this team.
+                </td>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
