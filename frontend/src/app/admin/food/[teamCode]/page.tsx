@@ -6,9 +6,9 @@ import { Nosifer } from 'next/font/google';
 import styles from '@/styles/AdminFood.module.css';
 import toast, { Toaster } from 'react-hot-toast';
 
-// --- Interfaces ---
+// --- Interfaces (Matches MongoDB/Mongoose Schema) ---
 interface MemberFoodStatus {
-  _id: string; // The MongoDB document ID
+  _id: string; // MongoDB Document ID
   name: string;
   teamName: string;
   teamId: string;
@@ -74,27 +74,28 @@ export default function FoodDistributionPage() {
         } else {
           setError("No members found for this team.");
         }
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) { // <-- Fix 1: Use unknown
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unknown error occurred');
+        }
       } finally {
         setLoading(false);
       }
     };
+
     fetchTeam();
   }, [teamCode]);
 
   // --- Update Handler ---
   const handleFoodToggle = async (
-    docId: string, // Use docId for optimistic UI update
-    teamId: string, // Send teamId to API
-    name: string,   // Send name to API
+    docId: string,
     field: StatusField
   ) => {
-    // Optimistically update the UI using the unique docId
     const originalData = [...membersData];
     const member = membersData.find((m) => m._id === docId);
     if (!member) return;
-    
     const newStatus = !member[field];
 
     setMembersData((prevData) =>
@@ -103,14 +104,12 @@ export default function FoodDistributionPage() {
       )
     );
 
-    // Call the API with teamId and name
     try {
       const response = await fetch('/api/admin/food/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          teamId: teamId, // Use teamId for matching
-          name: name,     // Use name for matching
+          docId: docId,
           field: field,
           status: newStatus,
         }),
@@ -122,17 +121,20 @@ export default function FoodDistributionPage() {
       toast.success(
         `${headerMap[field]} status updated!`
       );
-    } catch (saveError: any) {
+    } catch (saveError: unknown) { // <-- Fix 2: Use unknown
       console.error('Failed to save status:', saveError);
-      toast.error('Failed to save, reverting change.');
-      // Revert the state change on error
+      if (saveError instanceof Error) {
+        toast.error(`Failed to save: ${saveError.message}`);
+      } else {
+        toast.error('Failed to save, reverting change.');
+      }
       setMembersData(originalData);
     }
   };
 
   // --- Render logic ---
-  if (loading) { /* ... loading ... */ }
-  if (error) { /* ... error ... */ }
+  if (loading) { /* ... */ }
+  if (error) { /* ... */ }
 
   return (
     <div className={styles.pageContainer}>
@@ -143,7 +145,6 @@ export default function FoodDistributionPage() {
       <h2 className={styles.subTitle}>
         Team: {teamName} (Code: {teamCode})
       </h2>
-
       <div className={styles.tableWrapper}>
         <table className={styles.table}>
           <thead>
@@ -165,8 +166,7 @@ export default function FoodDistributionPage() {
                         type="checkbox"
                         id={`food-${member._id}-${item}`}
                         checked={!!member[item]}
-                        // Pass all necessary info to the handler
-                        onChange={() => handleFoodToggle(member._id, member.teamId, member.name, item)}
+                        onChange={() => handleFoodToggle(member._id, item)}
                         className={styles.checkbox}
                       />
                     </td>
@@ -177,11 +177,7 @@ export default function FoodDistributionPage() {
               <tr>
                 <td
                   colSpan={itemTypes.length + 1}
-                  style={{
-                    textAlign: 'center',
-                    color: '#888',
-                    padding: '20px',
-                  }}
+                  style={{ textAlign: 'center', color: '#888', padding: '20px' }}
                 >
                   No members found for this team.
                 </td>

@@ -19,8 +19,6 @@ export async function GET(
 
     await dbConnect();
 
-    // Find all documents in the 'food1' collection with the matching teamId
-    // Use .lean() to get plain JavaScript objects instead of Mongoose documents
     const members = await FoodLog.find({ teamId: teamCode }).lean();
 
     if (!members || members.length === 0) {
@@ -30,19 +28,20 @@ export async function GET(
       );
     }
 
-    // --- THIS IS THE CRITICAL CHANGE ---
-    // Manually map the results to ensure the _id is included as a string
     const membersData = members.map((member) => ({
       ...member,
-      _id: member._id.toString(), // Convert the MongoDB ObjectId to a string
+      _id: member._id.toString(),
     }));
-    // --- END CHANGE ---
 
     return NextResponse.json(membersData, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) { // <-- Fix 3: Use unknown
+    let message = 'Internal server error';
+    if (error instanceof Error) {
+      message = error.message;
+    }
     console.error('API Error:', error);
     return NextResponse.json(
-      { message: 'Internal server error', error: error.message },
+      { message, error: String(error) },
       { status: 500 }
     );
   }
